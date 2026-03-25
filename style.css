@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #0a0a1a;
+    font-family: 'Courier New', monospace;
+    color: #00ff88;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px #00ff88;
+}
+
+canvas {
+    border: 2px solid #00ff88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.controles {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    color:#00ff88;
+}
+
+.controles strong {
+    color: #ffcc00;
+}
+
+.info {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #00ff88;
+    text-align: center;
+}
+
+.debug {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: left;
+    background: #111;
+    padding: 10px;
+    border-radius: 5px;
+    min-width: 400px;
+}
+
+.debug span {
+    color: #00ff88;
+}
