@@ -275,18 +275,175 @@ function verificarColisoes()
         for (let linha = 0; linha < blocos.length; linha++)
         {
             // Percorre todas as COLUNAS dessa linha
-            for ()
+            for (let coluna = 0; coluna < blocos[linha].length; coluna++)
             {
-                
+                // Pega o bloco atual
+                let bloco = blocos[linha][coluna];
+
+                // Só faz a verificação se o bloco estiver ativo
+                if (bloco.ativo == false)
+                {
+                    continue; // Pula para o próximo bloco
+                }
+
+                // Testa a colisão
+                if ( testarColisao(tiros[t], bloco) )
+                {
+                    // COLIDIU!!!
+
+                    // Destroi o bloco
+                    destruirBloco(linha, coluna);
+
+                    // Desativa o tiro
+                    tiros[t].ativo = false;
+
+                    // Soma os pontos
+                    somarPontos(10);
+                }
             }
         }
     }
 }
 
+//=====================================
+// FUNÇÃO: CONTAR BLOCOS ATIVOS
+//  Retorna quantos blocos ainda existem
+//=====================================
+function contarBlocosAtivos()
+{
+    let contador = 0;
+
+    for (let linha = 0; linha < blocos.length; linha++)
+    {
+        for (let coluna = 0; coluna < blocos[linha].length; coluna++)
+        {
+            if (blocos[linha][coluna].ativo == true)
+            {
+                //contador = contador + 1;
+                //contador += 1;
+                contador++;
+            }
+        }
+    }
+    return contador;
+}
+
+//=====================================
+// FUNÇÃO: VERIFICAR VITÓRIA
+//=====================================
+function verificarVitoria()
+{
+    let blocosRestantes = contarBlocosAtivos();
+
+    if (blocosRestantes == 0)
+    {
+        venceu = true;
+        jogoAtivo = false; 
+    }
+}
+
+//=====================================
+// FUNÇÃO: REINICIAR JOGO
+//=====================================
+function reiniciarJogo()
+{
+    pontos = 0;
+    jogoAtivo = true;
+    venceu = false;
+    naveX = 275;
+
+    document.getElementById('pontos').textContent = '0';
+
+    criarBlocos();
+    criarTiros();
+}
+
+//=====================================
+// FUNÇÃO: DESENHAR TELA DE VITÓRIA
+//=====================================
+function desenharTelaVitoria()
+{
+    // Fundo semi-transparente
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Texto de vitória
+    ctx.fillStyle = '#00ff88';
+    ctx.font = 'bold 48px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('VITÓRIA!!', canvas.width / 2, 200);
+
+    // Pontuação
+
+    ctx.fillStyle = '#ffcc00';
+    ctx.font = '24px Courier New';
+    ctx.fillText('Pontos: ' + pontos, canvas.width / 2, 260);
+
+    // Instruções para reiniciar
+    ctx.fillStyle = '88ffcc';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Clique para jogar novamente', canvas.width / 2, 320);
+}
+
+//=====================================
+// FUNÇÃO: DESENHAR NAVE
+//=====================================
+function desenharNave()
+{
+    ctx.fillStyle = '#00ff88';
+
+    // Desenha um triângulo (nave)
+    ctx.beginPath();
+    ctx.moveTo(naveX + naveLargure / 2, naveY);
+    ctx.lineTo(naveX, naveY + naveAltura);
+    ctx.lineTo(naveX + naveLargure, naveY + naveAltura);
+    ctx.closePath();
+    ctx.fill();
+
+    // Desenha o corpo da nave
+    ctx.fillStyle = '#00cc66';
+    ctx.fillRect(naveX + 10, naveY + 10, naveLargure - 20, naveAltura - 5);
+}
+
+//=====================================
+// FUNÇÃO: DESENHAR BLOCOS
+//=====================================
+function desenharBlocos()
+{
+    let cores = ['#ffd93d', '#ff6b6b', '#6bcb77', '#4d96ff'];
+
+    
+}
 
 
+//=====================================
+// FUNÇÃO: DESENHAR TIROS (BOLINHAS)
+//=====================================
 
+//=====================================
+// FUNÇÃO: ATUALIZAR DEBUG
+//=====================================
 
+//=====================================
+// FUNÇÃO: DESENHAR JOGO
+//=====================================
+
+//=====================================
+// FUNÇÃO: LOOP DO JOGO
+// Roda 60 vezes por segundo
+//=====================================
+
+//=====================================
+// EVENTOS DO TECLADO
+//=====================================
+
+//=====================================
+// EVENTOS DO MOUSE
+//=====================================
+
+//=====================================
+// INICIA O JOGO
+//=====================================
 
 
 
