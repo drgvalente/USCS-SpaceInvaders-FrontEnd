@@ -412,40 +412,184 @@ function desenharBlocos()
 {
     let cores = ['#ffd93d', '#ff6b6b', '#6bcb77', '#4d96ff'];
 
-    
+    for (let linha = 0; linha < blocos.length; linha++)
+    {
+        for (let coluna = 0; coluna < blocos[linha].length; coluna++)
+        {
+            let bloco = blocos[linha][coluna];
+
+            if (bloco.ativo == true)
+            {
+                // Cor do bloco (muda por linha)
+                ctx.fillStyle = cores[linha];
+                ctx.fillRect(bloco.x, bloco.y, BLOCO_LARGURA, BLOCO_ALTURA);
+                // Borda branca
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(bloco.x, bloco.y, BLOCO_LARGURA, BLOCO_ALTURA);
+            }
+        }
+    }
 }
 
 
 //=====================================
 // FUNÇÃO: DESENHAR TIROS (BOLINHAS)
 //=====================================
+function desenharTiros()
+{
+    ctx.fillStyle = '#0ff';
+    ctx.shadowColor = '#0ff';
+    ctx.shadowBlur = 10;
+
+    for (let i = 0; i < tiros.length; i++)
+    {
+        if (tiros[i].ativo == true)
+        {
+            // Desenha um círculo
+            ctx.beginPath();
+            ctx.arc(tiros[i].x, tiros[i].y, TIRO_RAIO, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
+    ctx.shadowBlur = 0;
+}
 
 //=====================================
 // FUNÇÃO: ATUALIZAR DEBUG
 //=====================================
+function atualizarDebug()
+{
+    let blocosAtivos = contarBlocosAtivos();
+
+    let tirosAtivos = 0;
+    let tirosDisponiveis = 0;
+
+    for (let i = 0; i < tiros.length; i++)
+    {
+        if (tiros[i].ativo == true)
+        {
+            tirosAtivos = tirosAtivos + 1;
+        }
+        else
+        {
+            tirosDisponiveis = tirosDisponiveis + 1;
+        }
+    }
+    document.getElementById("debugBlocos").textContent = blocosAtivos;
+    document.getElementById("debugTirosAtivos").textContent = tirosDisponiveis;
+
+    if (cooldownAtivo)
+    {
+        document.getElementById("debugCooldown").textContent = 'Aguarde...';
+    }
+    else
+    {
+        document.getElementById("debugCooldown").textContent = 'Pronto!';
+    }
+}
 
 //=====================================
 // FUNÇÃO: DESENHAR JOGO
 //=====================================
+function desenhar()
+{
+    // Limpa a tela
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Desenha os elementos do jogo
+    desenharBlocos();
+    desenharTiros();
+    desenharNave();
+
+    // Se venceu, mostra a tela de vitória
+    if (venceu)
+    {
+        desenharTelaVitoria();
+    }
+}
 
 //=====================================
 // FUNÇÃO: LOOP DO JOGO
 // Roda 60 vezes por segundo
 //=====================================
+function loopDoJogo()
+{
+    // Só atualiza se o jogo está ativo
+    if (jogoAtivo)
+    {
+        mover();
+        verificarColisoes();
+        verificarVitoria();
+    }
+
+    desenhar();
+    atualizarDebug();
+
+    // Chama esta função novamente (cria o loop do jogo)
+    requestAnimationFrame(loopDoJogo);
+}
 
 //=====================================
 // EVENTOS DO TECLADO
 //=====================================
+// Quando pressiona uma tecla
+document.addEventListener('keydown', function(evento){
+    if (evento.key == 'ArrowLeft' || evento.key == 'a' || evento.key == 'A')
+    {
+        teclaEsquerda = true;
+    }
+    if (evento.key == 'ArrowRight' || evento.key == 'd' || evento.key == 'D')
+    {
+        teclaDireita = true;
+    }
+    if (evento.key == '')
+    {
+        evento.preventDefault();
+        atirar();
+    }
+});
+
+// Quando SOLTA uma tecla
+document.addEventListener('keyup', function(evento){
+    if (evento.key == 'ArrowLeft' || evento.key == 'a' || evento.key == 'A')
+    {
+        teclaEsquerda = false;
+    }
+    if (evento.key == 'ArrowRight' || evento.key == 'd' || evento.key == 'D')
+    {
+        teclaDireita = false;
+    }
+});
 
 //=====================================
 // EVENTOS DO MOUSE
 //=====================================
+canvas.addEventListener('click', function(evento){
+    // Se venceu, reinicia o jogo
+    if (venceu)
+    {
+        reiniciarJogo();
+        return;
+    }
+    // Caso contrário, atira
+    atirar();
+});
 
 //=====================================
 // INICIA O JOGO
 //=====================================
+criarBlocos();
+criarTiros();
+loopDoJogo();
 
-
+// Mostra as estruturas no console:
+console.log('=== MATRIZ DE BLOCOS ===');
+console.log('blocos = ', blocos);
+console.log('');
+console.log('=== ARRAY DE TIROS ===');
+console.log('tiros = ', tiros);
 
 
 
